@@ -3,35 +3,35 @@
 
 
 function cachingDecoratorNew(func) {
-    let cache = [];
-  
-    function wrapper(...args) {
-      const hash = md5(JSON.stringify(args));
-      let objectInCache = cache.find((item) => item.hash === hash);
-  
-      if (objectInCache) {
-        console.log("Из кеша: " + objectInCache.value);
-        return "Из кеша: " + objectInCache.value;
-      }
-  
-      let result = func(...args);
-      cache.push({ hash, value: result });
-  
-      if (cache.length > 5) {
-        cache.shift();
-      }
-  
-      console.log("Вычисляем: " + result);
-      return "Вычисляем: " + result;
+  let cache = [];
+
+  function wrapper(...args) {
+    const hash = md5(JSON.stringify(args));
+    let objectInCache = cache.find((item) => item.hash === hash);
+
+    if (objectInCache) {
+      console.log("Из кеша: " + objectInCache.value);
+      return "Из кеша: " + objectInCache.value;
     }
-  
-    return wrapper;
+
+    let result = func(...args);
+    cache.push({ hash, value: result });
+
+    if (cache.length > 5) {
+      cache.shift();
+    }
+
+    console.log("Вычисляем: " + result);
+    return "Вычисляем: " + result;
   }
-    
+
+  return wrapper;
+}
   
-  
-  const addAndMultiply = (a, b, c) => (a + b) * c;
-  const upgraded = cachingDecoratorNew(addAndMultiply);
+
+
+const addAndMultiply = (a, b, c) => (a + b) * c;
+const upgraded = cachingDecoratorNew(addAndMultiply);
 
 
 
@@ -39,30 +39,27 @@ function cachingDecoratorNew(func) {
 //Задача № 2
 
 function debounceDecoratorNew(func, delay) {
-  let timerId = null;
+let timerId = null;
 
-  function resultFunction(...args) {
-    if (!timerId) {
-      func(...args);
-      resultFunction.count++;
-    }
-
-    resultFunction.allCount++;
-
-    clearTimeout(timerId);
-    timerId = setTimeout(() => {
-      func(...args);
-      resultFunction.count++;
-    }, delay);
+function resultFunction(...args) {
+  if (!timerId) {
+    func(...args);
+    resultFunction.count++;
   }
 
-  resultFunction.count = 0;
-  resultFunction.allCount = 0;
+  resultFunction.allCount++;
 
-  return resultFunction;
+  clearTimeout(timerId);
+  timerId = setTimeout(() => {
+    func(...args);
+    resultFunction.count++;
+  }, delay);
+}
+
+resultFunction.count = 0;
+resultFunction.allCount = 0;
+
+return resultFunction;
 }
 
 let decorated = debounceDecoratorNew((...args) => console.log("дзынь", ...args), 3000);
-
-
-    
