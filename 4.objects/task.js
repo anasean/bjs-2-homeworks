@@ -1,6 +1,4 @@
-
-
-  class Student {
+class Student {
     constructor(name, gender, age) {
       this.name = name;
       this.gender = gender;
@@ -32,3 +30,4 @@
   }
   
 
+  
