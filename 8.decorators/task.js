@@ -39,22 +39,30 @@ function cachingDecoratorNew(func) {
 //Задача № 2
 
 function debounceDecoratorNew(func, delay) {
-    let timeoutId;
-    let count = 0;
-    let allCount = 0;
-  
-    function wrapper(...args) {
-      clearTimeout(timeoutId);
-      count++;
-      allCount++;
-      timeoutId = setTimeout(() => {
-        count = 0;
-        func(...args);
-      }, delay);
+  let timerId = null;
+
+  function resultFunction(...args) {
+    if (!timerId) {
+      func(...args);
+      resultFunction.count++;
     }
-  
-    wrapper.count = () => count;
-    wrapper.allCount = () => allCount;
-  
-    return wrapper;
+
+    resultFunction.allCount++;
+
+    clearTimeout(timerId);
+    timerId = setTimeout(() => {
+      func(...args);
+      resultFunction.count++;
+    }, delay);
   }
+
+  resultFunction.count = 0;
+  resultFunction.allCount = 0;
+
+  return resultFunction;
+}
+
+let decorated = debounceDecoratorNew((...args) => console.log("дзынь", ...args), 3000);
+
+
+    
