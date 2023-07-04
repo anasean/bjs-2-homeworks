@@ -11,10 +11,7 @@ class AlarmClock {
       
         if (this.alarmCollection.some(alarm => alarm.time === time)) {
           console.warn("Уже присутствует звонок на это же время");
-          this.alarmCollection = this.alarmCollection.filter(
-            alarm => alarm.time !== time
-          )
-        }
+                  }
         this.alarmCollection.push({ callback, time, canCall: true });
       }
   
@@ -25,11 +22,11 @@ class AlarmClock {
     }
   
     getCurrentFormattedTime() {
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, "0");
-      const minutes = String(now.getMinutes()).padStart(2, "0");
-      return ${hours}:${minutes};
-    }
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        return `${hours}:${minutes}`;
+    } 
   
     start() {
       if (this.intervalId !== null) {
